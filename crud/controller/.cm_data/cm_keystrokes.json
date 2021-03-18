@@ -1,0 +1,734 @@
+{
+    "controller.js": [
+        {
+            "operation": "PASTE",
+            "lines": 43,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:43:40",
+            "keyStrokeInfo": "/**\r\n * User controller : All business logic goes here\r\n */\r\nconst User = require(\"../models/User\");\r\nconst bcrypt = require(\"bcryptjs\");\r\n/**\r\n * this method is to create the user\r\n */\r\nexports.create = (req, res) => {\r\n  /**\r\n   * validation request\r\n   */\r\n  if (!req.body.email || !req.body.password || !req.body.name) {\r\n    return res.status(400).send({\r\n      message: \"Required field can not be empty\",\r\n    });\r\n  }\r\n  /**\r\n   * Create a user\r\n   */\r\n  const user = new User({\r\n    email: req.body.email,\r\n    password: bcrypt.hashSync(req.body.password, 10),\r\n    name: req.body.name,\r\n    age: req.body.age,\r\n    gender: req.body.gender,\r\n    isActive: req.body.isActive,\r\n    userType: req.body.userType,\r\n  });\r\n  /**\r\n   * Save user to database\r\n   */\r\n  user\r\n    .save()\r\n    .then((data) => {\r\n      res.send(data);\r\n    })\r\n    .catch((err) => {\r\n      res.status(500).send({\r\n        message: err.message || \"Some error occurred while creating the User.\",\r\n      });\r\n    });\r\n};",
+            "position": "1,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:43:40",
+            "keyStrokeInfo": " ",
+            "position": "43,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:43:53",
+            "keyStrokeInfo": "",
+            "position": "13,27"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:44:10",
+            "keyStrokeInfo": "",
+            "position": "13,8"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:44:14",
+            "keyStrokeInfo": "",
+            "position": "13,8"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:44:33",
+            "keyStrokeInfo": "",
+            "position": "22,6"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:44:39",
+            "keyStrokeInfo": "",
+            "position": "26,5"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:00",
+            "keyStrokeInfo": "\r\n   ",
+            "position": "27,7"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:01",
+            "keyStrokeInfo": "",
+            "position": "28,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 15,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:01",
+            "keyStrokeInfo": "/** \r\n * Find all Users\r\n */\r\nexports.findAll = (req, res) => {\r\n  User.find()\r\n    .sort({ name: -1 })\r\n    .then((users) => {\r\n      res.status(200).send(users);\r\n    })\r\n    .catch((err) => {\r\n      res.status(500).send({\r\n        message: err.message || \"Error Occured\",\r\n      });\r\n    });\r\n};",
+            "position": "29,4"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:01",
+            "keyStrokeInfo": "    ",
+            "position": "43,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:11",
+            "keyStrokeInfo": "    ",
+            "position": "43,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:36",
+            "keyStrokeInfo": "\r\n    ",
+            "position": "43,7"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:36",
+            "keyStrokeInfo": "",
+            "position": "44,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 20,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:37",
+            "keyStrokeInfo": "/**\r\n * Find one User\r\n */\r\nexports.findOne = (req, res) => {\r\n  User.findById(req.params.id)\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"User not found with id \" + req.params.id,\r\n        });\r\n      }\r\n      res.status(200).send(user);\r\n      console.log(user);\r\n    })\r\n    .catch((err) => {\r\n      return res.status(500).send({\r\n        message: \"Error retrieving user with id \" + req.params.id,\r\n      });\r\n    });\r\n};",
+            "position": "45,5"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:37",
+            "keyStrokeInfo": "    ",
+            "position": "64,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:41",
+            "keyStrokeInfo": "  ",
+            "position": "64,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 19,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:47",
+            "keyStrokeInfo": "",
+            "position": "45,5"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:49",
+            "keyStrokeInfo": "    ",
+            "position": "45,5"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 20,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:50",
+            "keyStrokeInfo": "/**\r\n * Find one User\r\n */\r\nexports.findOne = (req, res) => {\r\n  User.findById(req.params.id)\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"User not found with id \" + req.params.id,\r\n        });\r\n      }\r\n      res.status(200).send(user);\r\n      console.log(user);\r\n    })\r\n    .catch((err) => {\r\n      return res.status(500).send({\r\n        message: \"Error retrieving user with id \" + req.params.id,\r\n      });\r\n    });\r\n};",
+            "position": "45,9"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:46:50",
+            "keyStrokeInfo": "    ",
+            "position": "64,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:01",
+            "keyStrokeInfo": "            ",
+            "position": "63,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:05",
+            "keyStrokeInfo": "",
+            "position": "45,9"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:06",
+            "keyStrokeInfo": "",
+            "position": "45,5"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:10",
+            "keyStrokeInfo": "\r\n        ",
+            "position": "63,12"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:15",
+            "keyStrokeInfo": "",
+            "position": "64,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:18",
+            "keyStrokeInfo": "",
+            "position": "63,12"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:47:22",
+            "keyStrokeInfo": "\r\n     ",
+            "position": "64,8"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:48:19",
+            "keyStrokeInfo": "\r\n     ",
+            "position": "64,8"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:48:19",
+            "keyStrokeInfo": "",
+            "position": "65,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 19,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:48:21",
+            "keyStrokeInfo": "/**\r\n * Delete a user with the specified id in the request\r\n */\r\nexports.delete = (req, res) => {\r\n  User.findByIdAndRemove(req.params.id)\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"User not found \",\r\n        });\r\n      }\r\n      res.send({ message: \"User deleted successfully!\" });\r\n    })\r\n    .catch((err) => {\r\n      return res.status(500).send({\r\n        message: \"Could not delete user \",\r\n      });\r\n    });\r\n};",
+            "position": "66,6"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:48:21",
+            "keyStrokeInfo": "    ",
+            "position": "84,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:48:39",
+            "keyStrokeInfo": "        ",
+            "position": "84,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:48:43",
+            "keyStrokeInfo": "",
+            "position": "66,5"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:49:04",
+            "keyStrokeInfo": "\r\n    ",
+            "position": "85,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 24,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:49:06",
+            "keyStrokeInfo": "/**\r\n * Update a user with the specified id in the request\r\n */\r\nexports.UpdateUser = (req, res) => {\r\n  if (!req.body.email || !req.body.password || !req.body.name) {\r\n    res.status(400).send({\r\n      message: \"required fields cannot be empty\",\r\n    });\r\n  }\r\n  User.findByIdAndUpdate(req.params.id, req.body, { new: true })\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"no user found\",\r\n        });\r\n      }\r\n      res.status(200).send(user);\r\n    })\r\n    .catch((err) => {\r\n      return res.status(404).send({\r\n        message: \"error while updating the post\",\r\n      });\r\n    });\r\n};",
+            "position": "86,5"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:49:06",
+            "keyStrokeInfo": "    ",
+            "position": "109,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:49:19",
+            "keyStrokeInfo": "        ",
+            "position": "109,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:49:22",
+            "keyStrokeInfo": "",
+            "position": "86,5"
+        }
+    ],
+    "user_controller.js": [
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:18:58",
+            "keyStrokeInfo": "models\\user_model.js",
+            "position": "4,24"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:02",
+            "keyStrokeInfo": "",
+            "position": "4,30"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:02",
+            "keyStrokeInfo": "/",
+            "position": "4,30"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:05",
+            "keyStrokeInfo": ".",
+            "position": "4,24"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:06",
+            "keyStrokeInfo": "/",
+            "position": "4,25"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:43",
+            "keyStrokeInfo": "",
+            "position": "4,24"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:44",
+            "keyStrokeInfo": "",
+            "position": "4,30"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:44",
+            "keyStrokeInfo": "\\",
+            "position": "4,30"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:45",
+            "keyStrokeInfo": "../models/User",
+            "position": "4,24"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:52",
+            "keyStrokeInfo": "u",
+            "position": "4,34"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:52",
+            "keyStrokeInfo": "s",
+            "position": "4,35"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:52",
+            "keyStrokeInfo": "e",
+            "position": "4,36"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:53",
+            "keyStrokeInfo": "r",
+            "position": "4,37"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:56",
+            "keyStrokeInfo": "_",
+            "position": "4,38"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:56",
+            "keyStrokeInfo": "m",
+            "position": "4,39"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:57",
+            "keyStrokeInfo": "o",
+            "position": "4,40"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:57",
+            "keyStrokeInfo": "d",
+            "position": "4,41"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:57",
+            "keyStrokeInfo": "e",
+            "position": "4,42"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:19:57",
+            "keyStrokeInfo": "l",
+            "position": "4,43"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:20:54",
+            "keyStrokeInfo": "// ",
+            "position": "5,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:20:58",
+            "keyStrokeInfo": "c",
+            "position": "5,19"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 43,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:23:50",
+            "keyStrokeInfo": "/**\r\n * User controller : All business logic goes here\r\n */\r\nconst User = require(\"../models/User\");\r\nconst bcrypt = require(\"bcryptjs\");\r\n/**\r\n * this method is to create the user\r\n */\r\nexports.create = (req, res) => {\r\n  /**\r\n   * validation request\r\n   */\r\n  if (!req.body.email || !req.body.password || !req.body.name) {\r\n    return res.status(400).send({\r\n      message: \"Required field can not be empty\",\r\n    });\r\n  }\r\n  /**\r\n   * Create a user\r\n   */\r\n  const user = new User({\r\n    email: req.body.email,\r\n    password: bcrypt.hashSync(req.body.password, 10),\r\n    name: req.body.name,\r\n    age: req.body.age,\r\n    gender: req.body.gender,\r\n    isActive: req.body.isActive,\r\n    userType: req.body.userType,\r\n  });\r\n  /**\r\n   * Save user to database\r\n   */\r\n  user\r\n    .save()\r\n    .then((data) => {\r\n      res.send(data);\r\n    })\r\n    .catch((err) => {\r\n      res.status(500).send({\r\n        message: err.message || \"Some error occurred while creating the User.\",\r\n      });\r\n    });\r\n};",
+            "position": "1,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:23:50",
+            "keyStrokeInfo": " ",
+            "position": "43,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:23:51",
+            "keyStrokeInfo": "\r\n ",
+            "position": "43,4"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:23:52",
+            "keyStrokeInfo": "",
+            "position": "44,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 15,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:14",
+            "keyStrokeInfo": "/** \r\n * Find all Users\r\n */\r\nexports.findAll = (req, res) => {\r\n  User.find()\r\n    .sort({ name: -1 })\r\n    .then((users) => {\r\n      res.status(200).send(users);\r\n    })\r\n    .catch((err) => {\r\n      res.status(500).send({\r\n        message: err.message || \"Error Occured\",\r\n      });\r\n    });\r\n};",
+            "position": "45,2"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:14",
+            "keyStrokeInfo": "    ",
+            "position": "59,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:15",
+            "keyStrokeInfo": "\r\n  ",
+            "position": "59,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:15",
+            "keyStrokeInfo": "",
+            "position": "60,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 20,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:30",
+            "keyStrokeInfo": "/**\r\n * Find one User\r\n */\r\nexports.findOne = (req, res) => {\r\n  User.findById(req.params.id)\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"User not found with id \" + req.params.id,\r\n        });\r\n      }\r\n      res.status(200).send(user);\r\n      console.log(user);\r\n    })\r\n    .catch((err) => {\r\n      return res.status(500).send({\r\n        message: \"Error retrieving user with id \" + req.params.id,\r\n      });\r\n    });\r\n};",
+            "position": "61,3"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:30",
+            "keyStrokeInfo": "    ",
+            "position": "80,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:36",
+            "keyStrokeInfo": "\r\n  ",
+            "position": "80,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:37",
+            "keyStrokeInfo": "",
+            "position": "81,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 19,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:55",
+            "keyStrokeInfo": "/**\r\n * Delete a user with the specified id in the request\r\n */\r\nexports.delete = (req, res) => {\r\n  User.findByIdAndRemove(req.params.id)\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"User not found \",\r\n        });\r\n      }\r\n      res.send({ message: \"User deleted successfully!\" });\r\n    })\r\n    .catch((err) => {\r\n      return res.status(500).send({\r\n        message: \"Could not delete user \",\r\n      });\r\n    });\r\n};",
+            "position": "82,3"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:55",
+            "keyStrokeInfo": "    ",
+            "position": "100,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:56",
+            "keyStrokeInfo": "\r\n  ",
+            "position": "100,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:24:56",
+            "keyStrokeInfo": "",
+            "position": "101,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 24,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:13",
+            "keyStrokeInfo": "/**\r\n * Update a user with the specified id in the request\r\n */\r\nexports.UpdateUser = (req, res) => {\r\n  if (!req.body.email || !req.body.password || !req.body.name) {\r\n    res.status(400).send({\r\n      message: \"required fields cannot be empty\",\r\n    });\r\n  }\r\n  User.findByIdAndUpdate(req.params.id, req.body, { new: true })\r\n    .then((user) => {\r\n      if (!user) {\r\n        return res.status(404).send({\r\n          message: \"no user found\",\r\n        });\r\n      }\r\n      res.status(200).send(user);\r\n    })\r\n    .catch((err) => {\r\n      return res.status(404).send({\r\n        message: \"error while updating the post\",\r\n      });\r\n    });\r\n};",
+            "position": "102,3"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:13",
+            "keyStrokeInfo": "    ",
+            "position": "125,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:14",
+            "keyStrokeInfo": "\r\n  ",
+            "position": "125,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:14",
+            "keyStrokeInfo": "",
+            "position": "126,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:32",
+            "keyStrokeInfo": "u",
+            "position": "4,34"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:33",
+            "keyStrokeInfo": "s",
+            "position": "4,35"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:33",
+            "keyStrokeInfo": "e",
+            "position": "4,36"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:33",
+            "keyStrokeInfo": "r",
+            "position": "4,37"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:34",
+            "keyStrokeInfo": "_",
+            "position": "4,38"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:34",
+            "keyStrokeInfo": "m",
+            "position": "4,39"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:34",
+            "keyStrokeInfo": "o",
+            "position": "4,40"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:34",
+            "keyStrokeInfo": "d",
+            "position": "4,41"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:35",
+            "keyStrokeInfo": "e",
+            "position": "4,42"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:35",
+            "keyStrokeInfo": "l",
+            "position": "4,43"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:25:39",
+            "keyStrokeInfo": "// ",
+            "position": "5,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:31:08",
+            "keyStrokeInfo": "",
+            "position": "5,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:31:13",
+            "keyStrokeInfo": "// ",
+            "position": "5,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:34",
+            "keyStrokeInfo": "",
+            "position": "22,6"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:34",
+            "keyStrokeInfo": "",
+            "position": "22,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:35",
+            "keyStrokeInfo": "",
+            "position": "22,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:35",
+            "keyStrokeInfo": "",
+            "position": "21,27"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:39",
+            "keyStrokeInfo": "",
+            "position": "25,6"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:40",
+            "keyStrokeInfo": "",
+            "position": "25,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:40",
+            "keyStrokeInfo": "",
+            "position": "25,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:40",
+            "keyStrokeInfo": "",
+            "position": "24,30"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:42",
+            "keyStrokeInfo": "",
+            "position": "24,29"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:33:52",
+            "keyStrokeInfo": "",
+            "position": "13,8"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:34:39",
+            "keyStrokeInfo": "",
+            "position": "102,9"
+        }
+    ]
+}

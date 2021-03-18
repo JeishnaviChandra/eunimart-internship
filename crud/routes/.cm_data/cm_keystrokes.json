@@ -1,0 +1,46 @@
+{
+    "user_routes.js": [
+        {
+            "operation": "PASTE",
+            "lines": 10,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:50:22",
+            "keyStrokeInfo": "const express = require(\"express\");\r\nconst router = express.Router();\r\nconst userControllr = require(\"../controllers/user_controller\");\r\n\r\nrouter.get(\"/\", userControllr.findAll);\r\nrouter.post(\"/\", userControllr.create);\r\nrouter.get(\"/:id\", userControllr.findOne);\r\nrouter.put(\"/:id\", userControllr.UpdateUser);\r\nrouter.delete(\"/:id\", userControllr.delete);\r\nmodule.exports = router;",
+            "position": "1,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 02:12:56",
+            "keyStrokeInfo": "",
+            "position": "3,45"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:22:09",
+            "keyStrokeInfo": "",
+            "position": "2,7"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:22:11",
+            "keyStrokeInfo": "router",
+            "position": "2,7"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 10,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:23:09",
+            "keyStrokeInfo": "const express = require(\"express\");\r\nconst router = express.Router();\r\nconst userControllr = require(\"../controllers/user_controller\");\r\n\r\nrouter.get(\"/\", userControllr.findAll);\r\nrouter.post(\"/\", userControllr.create);\r\nrouter.get(\"/:id\", userControllr.findOne);\r\nrouter.put(\"/:id\", userControllr.UpdateUser);\r\nrouter.delete(\"/:id\", userControllr.delete);\r\nmodule.exports = router;",
+            "position": "1,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 13:26:29",
+            "keyStrokeInfo": "",
+            "position": "3,45"
+        }
+    ]
+}

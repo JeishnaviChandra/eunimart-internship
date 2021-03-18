@@ -1,0 +1,193 @@
+{
+    "user_model.js": [
+        {
+            "operation": "PASTE",
+            "lines": 59,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:38:52",
+            "keyStrokeInfo": "const mongoose = require(\"../db\");\r\nconst schema = new mongoose.Schema(\r\n  {\r\n    email: {\r\n      desc: \"The user's email address.\",\r\n      trim: true,\r\n      type: String,\r\n      index: true,\r\n      unique: true,\r\n      required: true,\r\n    },\r\n    password: {\r\n      desc: \"user password\",\r\n      trim: true,\r\n      type: String,\r\n      required: true,\r\n      select: false,\r\n    },\r\n    name: {\r\n      desc: \"The user's name.\",\r\n      trim: true,\r\n      type: String,\r\n      required: true,\r\n    },\r\n    age: {\r\n      desc: \"The users's age.\",\r\n      type: Number,\r\n    },\r\n    gender: {\r\n      desc: \"user gender.\",\r\n      trim: true,\r\n      type: String,\r\n      enum: [\"Male\", \"Female\", \"Others\"],\r\n      default: \"Others\",\r\n      required: true,\r\n    },\r\n    isActive: {\r\n      desc: \"is Active.\",\r\n      type: Boolean,\r\n      default: true,\r\n      required: true,\r\n    },\r\n    userType: {\r\n      desc: \"user roles.\",\r\n      trim: true,\r\n      type: String,\r\n      enum: [\"Admin\", \"User\"],\r\n      default: \"Admin\",\r\n      required: true,\r\n    },\r\n  },\r\n  {\r\n    strict: true,\r\n    versionKey: false,\r\n    timestamps: { createdAt: \"createdAt\", updatedAt: \"updatedAt\" },\r\n  }\r\n);\r\n\r\nmodule.exports = mongoose.model(\"Users\", schema);",
+            "position": "1,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 14,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:39:53",
+            "keyStrokeInfo": "",
+            "position": "4,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:39:55",
+            "keyStrokeInfo": "",
+            "position": "4,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:39:55",
+            "keyStrokeInfo": "",
+            "position": "3,4"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 13,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:40:03",
+            "keyStrokeInfo": "",
+            "position": "22,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:40:04",
+            "keyStrokeInfo": "",
+            "position": "22,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 00:40:05",
+            "keyStrokeInfo": "",
+            "position": "21,7"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:35",
+            "keyStrokeInfo": "",
+            "position": "5,14"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:39",
+            "keyStrokeInfo": "",
+            "position": "11,17"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:39",
+            "keyStrokeInfo": "",
+            "position": "11,16"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:40",
+            "keyStrokeInfo": "",
+            "position": "11,15"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:40",
+            "keyStrokeInfo": "",
+            "position": "11,14"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:42",
+            "keyStrokeInfo": "",
+            "position": "15,18"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:43",
+            "keyStrokeInfo": "",
+            "position": "15,17"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:43",
+            "keyStrokeInfo": "",
+            "position": "15,16"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:43",
+            "keyStrokeInfo": "",
+            "position": "15,15"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 01:22:44",
+            "keyStrokeInfo": "",
+            "position": "15,14"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 4,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:21:24",
+            "keyStrokeInfo": "",
+            "position": "23,3"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:50:56",
+            "keyStrokeInfo": "// ",
+            "position": "16,7"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:03",
+            "keyStrokeInfo": "\r\n      ",
+            "position": "16,21"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:06",
+            "keyStrokeInfo": "",
+            "position": "17,5"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:06",
+            "keyStrokeInfo": "",
+            "position": "17,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:07",
+            "keyStrokeInfo": "",
+            "position": "17,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:08",
+            "keyStrokeInfo": "",
+            "position": "16,21"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:41",
+            "keyStrokeInfo": "",
+            "position": "16,7"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:46",
+            "keyStrokeInfo": "// ",
+            "position": "6,7"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Thu Mar 18 2021 14:51:48",
+            "keyStrokeInfo": "// ",
+            "position": "16,7"
+        }
+    ]
+}
