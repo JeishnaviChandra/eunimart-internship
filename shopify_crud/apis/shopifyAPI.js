@@ -54,7 +54,7 @@ shopifyRouter.route('/products')
         res.send("shop missed")
 	}
 });
-
+shopifyRouter.route('/products')
 .post(async(req, res) => {
     const {product, shop} = req.body
     console.log("inproducts")
@@ -97,6 +97,7 @@ shopifyRouter.route('/products')
     }
   });
 
+  shopifyRouter.route('/products/:product_id')
   .delete(async(req, res) => {
   
     const {product_id} = req.params
@@ -120,4 +121,57 @@ shopifyRouter.route('/products')
     }
   });
 
+  
+  shopifyRouter.get('./getOrders', async(req, res) => {
+        console.log("got into orders")
+        try {
+            const url = 'https://74dffbe019dd03437bda9608f9938ce8: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@closestone.myshopify.com/admin/api/2021-01/orders.json?status=any';
+            const resp = await axios.get(url)
+            console.log("order received")
+            res.send(resp.data)
+        } catch (error) {
+            console.log(error)
+            res.send("Error occurred while getting orders")
+        }
+});
 
+shopifyRouter.post('./postOrders', async(req, res) => {
+    console.log("got into orders")
+    try {
+        const url = 'https://74dffbe019dd03437bda9608f9938ce8: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@closestone.myshopify.com/admin/api/2021-01/orders.json';
+        const resp = await axios.post(url)
+        console.log("order posted")
+        res.send(resp.data)
+    } catch (error) {
+        console.log(error)
+        res.send("Error occurred while creating orders")
+    }
+});
+
+shopifyRouter.delete('./deleteOrders', async(req, res) => {
+    console.log("got into orders")
+    const order_id = req.query.order_id
+    try {
+        const url = 'https://74dffbe019dd03437bda9608f9938ce8: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@closestone.myshopify.com/admin/api/2021-01/orders/'+ order_id+ '.json';
+        const resp = await axios.post(url)
+        console.log("order deleted")
+        res.send(resp.data)
+    } catch (error) {
+        console.log(error)
+        res.send("Error occurred while deleting orders")
+    }
+});
+
+shopifyRouter.put('./putOrder', async(req, res) => {
+    console.log("got into orders")
+    const order_id = req.query.order_id
+    try {
+        const url = 'https://74dffbe019dd03437bda9608f9938ce8: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@closestone.myshopify.com/admin/api/2021-01/orders/'+ order_id+ '.json';
+        const resp = await axios.post(url)
+        console.log("order updated")
+        res.send(resp.data)
+    } catch (error) {
+        console.log(error)
+        res.send("Error occurred while updating order")
+    }
+});

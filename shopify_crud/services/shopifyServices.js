@@ -8,7 +8,8 @@ const apiSecret = process.env.SHOPIFY_API_SECRET;
 const scopes = 'read_products, write_products';
 const forwardingAddress = "https://26ee6bbba610.ngrok.io"; 
 const crypto = require('crypto')
-const querystring = require('querystring')
+const querystring = require('querystring');
+const { default: axios } = require('axios');
 
 exports.buildingInstallUrl = (shop) => {
     const state = nonce();
@@ -74,6 +75,19 @@ exports.getProducts = (shop) => {
         }
     })
 }
+
+// exports.getOrders('./getOrders', async(req,res) => {
+//     try {
+//         const url = 'https://74dffbe019dd03437bda9608f9938ce8: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@closestone.myshopify.com/admin/api/2021-01/orders.json?status=any';
+//         const resp = await axios.get(url)
+//         console.log("order received")
+//         res.send(resp.data)
+//     } catch (error) {
+//         console.log(error)
+//         res.send("Error occurred while getting orders")
+//     }
+// }) 
+    
 
 exports.addProduct = (shop, newProduct) => {
     return new Promise(async(resolve, reject) => {
