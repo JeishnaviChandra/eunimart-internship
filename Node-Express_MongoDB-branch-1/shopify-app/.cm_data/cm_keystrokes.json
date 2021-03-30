@@ -1,0 +1,57 @@
+{
+    ".env": [
+        {
+            "operation": "PASTE",
+            "lines": 2,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:10:15",
+            "keyStrokeInfo": "SHOPIFY_API_KEY=\"e7eb692c54739f78adb09700a0494757\"\r\nSHOPIFY_API_SECRET=\"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\"\r\n\r\n",
+            "position": "1,1"
+        }
+    ],
+    ".gitignore": [
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:10:23",
+            "keyStrokeInfo": "\r\n",
+            "position": "1,13"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:10:24",
+            "keyStrokeInfo": ".",
+            "position": "2,1"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:10:24",
+            "keyStrokeInfo": "e",
+            "position": "2,2"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:10:25",
+            "keyStrokeInfo": "n",
+            "position": "2,3"
+        },
+        {
+            "operation": "TYPED",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:10:25",
+            "keyStrokeInfo": "v",
+            "position": "2,4"
+        }
+    ],
+    "app.js": [
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Sat Mar 27 2021 15:17:31",
+            "keyStrokeInfo": "shopifyProductsdb",
+            "position": "18,40"
+        }
+    ]
+}

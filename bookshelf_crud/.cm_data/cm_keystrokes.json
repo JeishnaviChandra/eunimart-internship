@@ -1,0 +1,220 @@
+{
+    "app.js": [
+        {
+            "operation": "PASTE",
+            "lines": 475,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:00:46",
+            "keyStrokeInfo": "var knex = require('knex')({\r\n  client: 'mysql',\r\n  connection: {\r\n    host: 'localhost',\r\n    user: 'root',\r\n    password: 'juliet',\r\n    database: 'nodemysql',\r\n    charset: 'utf8'\r\n  }\r\n});\r\n\r\nvar Bookshelf = require('bookshelf')(knex);\r\nvar express = require('express');\r\nvar app = express();\r\nvar bodyParser = require('body-parser');\r\nvar _ = require('lodash');\r\n\r\n\r\n\r\n\r\nvar router = express.Router();\r\n\r\n// for forms\r\napp.use(bodyParser.urlencoded({extended: true}));\r\napp.use(bodyParser.json()); \r\n\r\n\r\n/*\r\n *   Models\r\n**/\r\n\r\n// User model\r\nvar User = Bookshelf.Model.extend({\r\n  tableName: 'users'\r\n});\r\n    \r\n// Post model\r\nvar Post = Bookshelf.Model.extend({\r\n\r\n  tableName: 'posts',\r\n\r\n  hasTimestamps: true,\r\n\r\n  category: function () {\r\n    return this.belongsTo(Category, 'category_id');\r\n  },\r\n\r\n  tags: function () {\r\n    return this.belongsToMany(Tag);\r\n  },\r\n\r\n  author: function () {\r\n    return this.belongsTo(User);\r\n  }\r\n});\r\n\r\n// Category model\r\nvar Category = Bookshelf.Model.extend({\r\n\r\n  tableName: 'categories',\r\n\r\n  posts: function () {\r\n    return this.hasMany(Post);\r\n  }\r\n});\r\n\r\n// Tag model\r\nvar Tag = Bookshelf.Model.extend({\r\n\r\n  tableName: 'tags',\r\n\r\n  posts: function () {\r\n    return this.belongsToMany(Post);\r\n  }\r\n});\r\n\r\n\r\n/*\r\nBuilding a simple API with Express and Bookshelf.js\r\n\r\n\r\n\r\nIt's been a long time since my last post, work commitment has kept very busy - hopefully next year I'll be able to publish regularly.\r\n\r\nThis article is a continuation of the last one - Using Node.js with MySQL. Today we are going to be building a simple restful API with Bookshelf.js and Express.\r\n\r\nIn the last article we ended by defining our models, it is also a good idea to create\r\n`Collections` which will give us the ability to perform wholesale operations our `Models`.\r\n\r\n### Collections\r\n**/\r\n\r\n\r\nvar Users = Bookshelf.Collection.extend({\r\n  model: User\r\n});\r\n\r\nvar Posts = Bookshelf.Collection.extend({\r\n  model: Post\r\n});\r\n\r\nvar Categories = Bookshelf.Collection.extend({\r\n  model: Category\r\n});\r\n\r\nvar Tags = Bookshelf.Collection.extend({\r\n  model: Tag\r\n});\r\n\r\n\r\n/**\r\n\r\nNext we need to define our API end points - we need to be able to perform basic CRUD operations on the following resources: `users`, `categories`, and `posts`.\r\n\r\n\r\n### Users\r\n\r\n - `GET    /users`    - fetch all users\r\n - `POST   /user`     - create a new user\r\n - `GET    /user/:id` - fetch a single user\r\n - `PUT    /user/:id` - update user\r\n - `DELETE /user/:id` - delete user\r\n\r\n\r\n### Categories\r\n\r\n - `GET    /categories`   - fetch all categories\r\n - `POST   /category`     - create a new category\r\n - `GET    /category/:id` - fetch a single category\r\n - `PUT    /category/:id` - update category\r\n - `DELETE /category/:id` - delete category\r\n\r\n\r\n### Posts\r\n\r\n - `GET    /posts`    - fetch all posts\r\n - `POST   /post`     - create a new post\r\n - `GET    /post/:id` - fetch a single post\r\n - `PUT    /post/:id` - update post\r\n - `DELETE /post/:id` - delete post\r\n\r\n - `GET    /posts/category/:id` - fetch all posts from a single category\r\n - `GET    /posts/tags/:slug`   - fetch all posts from a single tag us\r\n\r\n\r\nAll is set, now we can go ahead and start setting up our api routes. First up we'll create a users route, every post created will require a user.\r\n**/\r\n\r\n\r\nrouter.route('/users')\r\n  // fetch all users\r\n  .get(function (req, res) {\r\n    Users.forge()\r\n    .fetch()\r\n    .then(function (collection) {\r\n      res.json({error: false, data: collection.toJSON()});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  })\r\n\r\n  // create a user\r\n  .post(function (req, res) {\r\n    User.forge({\r\n      name: req.body.name,\r\n      email: req.body.email\r\n    })\r\n    .save()\r\n    .then(function (user) {\r\n      res.json({error: false, data: {id: user.get('id')}});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    }); \r\n  });\r\n\r\nrouter.route('/users/:id')\r\n  // fetch user\r\n  .get(function (req, res) {\r\n    User.forge({id: req.params.id})\r\n    .fetch()\r\n    .then(function (user) {\r\n      if (!user) {\r\n        res.status(404).json({error: true, data: {}});\r\n      }\r\n      else {\r\n        res.json({error: false, data: user.toJSON()});\r\n      }\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  })\r\n\r\n  // update user details\r\n  .put(function (req, res) {\r\n    User.forge({id: req.params.id})\r\n    .fetch({require: true})\r\n    .then(function (user) {\r\n      user.save({\r\n        name: req.body.name || user.get('name'),\r\n        email: req.body.email || user.get('email')\r\n      })\r\n      .then(function () {\r\n        res.json({error: false, data: {message: 'User details updated'}});\r\n      })\r\n      .otherwise(function (err) {\r\n        res.status(500).json({error: true, data: {message: err.message}});\r\n      });\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  })\r\n\r\n  // delete a user\r\n  .delete(function (req, res) {\r\n    User.forge({id: req.params.id})\r\n    .fetch({require: true})\r\n    .then(function (user) {\r\n      user.destroy()\r\n      .then(function () {\r\n        res.json({error: true, data: {message: 'User successfully deleted'}});\r\n      })\r\n      .otherwise(function (err) {\r\n        res.status(500).json({error: true, data: {message: err.message}});\r\n      });\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  });\r\n\r\n\r\nrouter.route('/categories')\r\n  // fetch all categories\r\n  .get(function (req, res) {\r\n    Categories.forge()\r\n    .fetch()\r\n    .then(function (collection) {\r\n      res.json({error: false, data: collection.toJSON()});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  })\r\n\r\n  // create a new category\r\n  .post(function (req, res) {\r\n    Category.forge({name: req.body.name})\r\n    .save()\r\n    .then(function (category) {\r\n      res.json({error: false, data: {id: category.get('id')}});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    }); \r\n  });\r\n\r\nrouter.route('/categories/:id')\r\n  // fetch all categories\r\n  .get(function (req, res) {\r\n    Category.forge({id: req.params.id})\r\n    .fetch()\r\n    .then(function (category) {\r\n      if(!category) {\r\n        res.status(404).json({error: true, data: {}});\r\n      }\r\n      else {\r\n        res.json({error: false, data: category.toJSON()});\r\n      }\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  })   \r\n\r\n  // update a category\r\n  .put(function (req, res) {\r\n    Category.forge({id: req.params.id})\r\n    .fetch({require: true})\r\n    .then(function (category) {\r\n      category.save({name: req.body.name || category.get('name')})\r\n      .then(function () {\r\n        res.json({error: false, data: {message: 'Category updated'}});\r\n      })\r\n      .otherwise(function (err) {\r\n        res.status(500).json({error: true, data: {message: err.message}});\r\n      });\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  })\r\n\r\n  // delete a category\r\n  .delete(function (req, res) {\r\n    Category.forge({id: req.params.id})\r\n    .fetch({require: true})\r\n    .then(function (category) {\r\n      category.destroy()\r\n      .then(function () {\r\n        res.json({error: true, data: {message: 'Category successfully deleted'}});\r\n      })\r\n      .otherwise(function (err) {\r\n        res.status(500).json({error: true, data: {message: err.message}});\r\n      });\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  });\r\n\r\n\r\nfunction saveTags(tags) {\r\n  var tagObjects = tags.map(function (tag) {\r\n    return {\r\n      name: tag,\r\n      slug: tag.replace(/ /g, '-').toLowerCase()\r\n    };\r\n  });\r\n\r\n  return Tags.forge()\r\n  .query('whereIn', 'slug', _.pluck(tagObjects, 'slug'))\r\n  .fetch()\r\n  .then(function (existingTags) {\r\n    var doNotExist = [];\r\n\r\n    existingTags = existingTags.toJSON();\r\n\r\n    if (existingTags.length > 0) {\r\n      var existingSlugs = _.pluck(existingTags, 'slug');\r\n\r\n      doNotExist = tagObjects.filter(function (t) {\r\n        return existingSlugs.indexOf(t.slug) < 0;\r\n      });\r\n    }\r\n    else {\r\n      doNotExist = tagObjects;\r\n    }\r\n\r\n    return new Tags(doNotExist).mapThen(function(model) {\r\n      return model.save()\r\n      .then(function() {\r\n        return model.get('id');\r\n      });\r\n    })\r\n    .then(function (ids) {\r\n      return _.union(ids, _.pluck(existingTags, 'id'));\r\n    });\r\n  });\r\n}\r\n\r\n\r\nrouter.route('/posts')\r\n  // fetch all posts\r\n  .get(function (req, res) {\r\n    Posts.forge()\r\n    .fetch()\r\n    .then(function (collection) {\r\n      res.json({error: false, data: collection.toJSON()});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  });\r\n\r\nrouter.route('/posts/:id')\r\n  // fetch a post by id\r\n  .get(function (req, res) {\r\n    Post.forge({id: req.params.id})\r\n    .fetch({withRelated: ['categories', 'tags']})\r\n    .then(function (post) {\r\n      if (!post) {\r\n        res.status(404).json({error: true, data: {}});\r\n      }\r\n      else {\r\n        res.json({error: false, data: post.toJSON()});\r\n      }\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  });\r\n\r\n\r\n\r\nrouter.route('/posts')\r\n\r\n  .post(function (req, res) {\r\n    var tags = req.body.tags;\r\n   \r\n   // parse tags variable\r\n    if (tags) {\r\n      tags = tags.split(',').map(function (tag){\r\n        return tag.trim();\r\n      });\r\n    }\r\n    else {\r\n      tags = ['uncategorised'];\r\n    }\r\n    \r\n    // save post variables\r\n    Post.forge({\r\n      user_id: req.body.user_id,\r\n      category_id: req.body.category_id,\r\n      title: req.body.title,\r\n      slug: req.body.title.replace(/ /g, '-').toLowerCase(),\r\n      html: req.body.post\r\n    })\r\n    .save()\r\n    .then(function (post) {\r\n      \r\n      // post successfully saved\r\n      // save tags\r\n      saveTags(tags)\r\n      .then(function (ids) {\r\n\r\n        post.load(['tags'])\r\n        .then(function (model) {\r\n         \r\n          // attach tags to post\r\n          model.tags().attach(ids);\r\n\r\n          res.json({error: false, data: {message: 'Tags saved'}});\r\n        })\r\n        .otherwise(function (err) {\r\n          res.status(500).json({error: true, data: {message: err.message}});\r\n        });\r\n      })\r\n      .otherwise(function (err) {\r\n        res.status(500).json({error: true, data: {message: err.message}}); \r\n      });      \r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    }); \r\n  });\r\n\r\n\r\nrouter.route('/posts/category/:id')\r\n  .get(function (req, res) {\r\n    Category.forge({id: req.params.id})\r\n    .fetch({withRelated: ['posts']})\r\n    .then(function (category) {\r\n      var posts = category.related('posts');\r\n\r\n      res.json({error: false, data: posts.toJSON()});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  });\r\n\r\nrouter.route('/posts/tag/:slug')\r\n  .get(function (req, res) {\r\n    Tag.forge({slug: req.params.slug})\r\n    .fetch({withRelated: ['posts']})\r\n    .then(function (tag) {\r\n      var posts = tag.related('posts');\r\n\r\n      res.json({error: false, data: posts.toJSON()});\r\n    })\r\n    .otherwise(function (err) {\r\n      res.status(500).json({error: true, data: {message: err.message}});\r\n    });\r\n  });\r\n\r\n\r\napp.use('/api', router);\r\n\r\napp.listen(3002, function() {\r\n  console.log(\"✔ Express server listening on port %d in %s mode\", 3002, app.get('env'));\r\n});",
+            "position": "1,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:00:46",
+            "keyStrokeInfo": "    ",
+            "position": "475,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:17",
+            "keyStrokeInfo": "",
+            "position": "146,3"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 2,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:20",
+            "keyStrokeInfo": "All is set, now we can go ahead and start setting up our api routes. First up we'll create a users route, every post created will require a user.\r\n  **/",
+            "position": "146,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:34",
+            "keyStrokeInfo": "",
+            "position": "146,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:35",
+            "keyStrokeInfo": "",
+            "position": "146,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:35",
+            "keyStrokeInfo": "",
+            "position": "145,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:36",
+            "keyStrokeInfo": "",
+            "position": "145,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:36",
+            "keyStrokeInfo": "",
+            "position": "144,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:37",
+            "keyStrokeInfo": "",
+            "position": "144,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:50",
+            "keyStrokeInfo": "",
+            "position": "113,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:50",
+            "keyStrokeInfo": "",
+            "position": "113,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:51",
+            "keyStrokeInfo": "",
+            "position": "112,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 14,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:01:59",
+            "keyStrokeInfo": "",
+            "position": "78,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:00",
+            "keyStrokeInfo": "",
+            "position": "78,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:01",
+            "keyStrokeInfo": "",
+            "position": "77,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:14",
+            "keyStrokeInfo": "",
+            "position": "19,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:14",
+            "keyStrokeInfo": "",
+            "position": "18,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:15",
+            "keyStrokeInfo": "",
+            "position": "18,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:15",
+            "keyStrokeInfo": "",
+            "position": "17,3"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 0,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:17",
+            "keyStrokeInfo": "",
+            "position": "17,1"
+        },
+        {
+            "operation": "DELETE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:02:17",
+            "keyStrokeInfo": "",
+            "position": "16,29"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:36:09",
+            "keyStrokeInfo": "// ",
+            "position": "172,5"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:36:52",
+            "keyStrokeInfo": "// ",
+            "position": "255,5"
+        }
+    ],
+    "schema.js": [
+        {
+            "operation": "PASTE",
+            "lines": 38,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:04:43",
+            "keyStrokeInfo": "var Schema = {\r\n  users: {\r\n    id: {type: 'increments', nullable: false, primary: true},\r\n    email: {type: 'string', maxlength: 254, nullable: false, unique: true},\r\n    name: {type: 'string', maxlength: 150, nullable: false}\r\n  },\r\n\r\n  categories: {\r\n    id: {type: 'increments', nullable: false, primary: true},\r\n    name: {type: 'string', maxlength: 150, nullable: false}\r\n  },\r\n\r\n  posts: {\r\n    id: {type: 'increments', nullable: false, primary: true},\r\n    user_id: {type: 'integer', nullable: false, unsigned: true},\r\n    category_id: {type: 'integer', nullable: false, unsigned: true},\r\n    title: {type: 'string', maxlength: 150, nullable: false},\r\n    slug: {type: 'string', maxlength: 150, nullable: false, unique: true},\r\n    html: {type: 'text', maxlength: 16777215, fieldtype: 'medium', nullable: false},\r\n    created_at: {type: 'dateTime', nullable: false},\r\n    updated_at: {type: 'dateTime', nullable: true}\r\n  },\r\n\r\n  tags: {\r\n    id: {type: 'increments', nullable: false, primary: true},\r\n    slug: {type: 'string', maxlength: 150, nullable: false, unique: true},\r\n    name: {type: 'string', maxlength: 150, nullable: false}\r\n  },\r\n\r\n  posts_tags: {\r\n    id: {type: 'increments', nullable: false, primary: true},\r\n    post_id: {type: 'integer', nullable: false, unsigned: true},\r\n    tag_id: {type: 'integer', nullable: false, unsigned: true}\r\n  }\r\n};\r\n\r\n\r\nmodule.exports = Schema;",
+            "position": "1,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:04:43",
+            "keyStrokeInfo": "    ",
+            "position": "38,1"
+        }
+    ],
+    "package.json": [
+        {
+            "operation": "PASTE",
+            "lines": 9,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:28:09",
+            "keyStrokeInfo": "  \"license\": \"ISC\",\n  \"dependencies\": {\n    \"cookie\": \"^0.4.1\",\n    \"dotenv\": \"^8.2.0\",\n    \"express\": \"^4.17.1\",\n    \"nonce\": \"^1.0.4\",\n    \"request\": \"^2.88.2\",\n    \"request-promise\": \"^4.2.6\"\n  }\n",
+            "position": "10,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:28:24",
+            "keyStrokeInfo": "    \"body-parser\": \"^1.19.0\",\n",
+            "position": "12,1"
+        }
+    ],
+    "index.js": [
+        {
+            "operation": "PASTE",
+            "lines": 91,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:30:33",
+            "keyStrokeInfo": "\r\nvar knex = require('knex')({\r\n  client: 'mysql',\r\n  connection: {\r\n    host: 'localhost',\r\n    user: 'root',\r\n    password: 'juliet',\r\n    database: 'nodemysql',\r\n    charset: 'utf8'\r\n  }\r\n});\r\nvar Bookshelf = require('bookshelf')(knex);\r\nvar Schema = require('./schema');\r\nvar sequence = require('when/sequence');\r\nvar _ = require('lodash');\r\n\r\n\r\nfunction createTable(tableName) {\r\n\r\n  return knex.schema.createTable(tableName, function (table) {\r\n\r\n    var column;\r\n    var columnKeys = _.keys(Schema[tableName]);\r\n\r\n    _.each(columnKeys, function (key) {\r\n      // creation distinguishes between text with fieldtype, string with maxlength and all others\r\n      if (Schema[tableName][key].type === 'text' && Schema[tableName][key].hasOwnProperty('fieldtype')) {\r\n        column = table[Schema[tableName][key].type](key, Schema[tableName][key].fieldtype);\r\n      }\r\n      else if (Schema[tableName][key].type === 'string' && Schema[tableName][key].hasOwnProperty('maxlength')) {\r\n        column = table[Schema[tableName][key].type](key, Schema[tableName][key].maxlength);\r\n      }\r\n      else {\r\n        column = table[Schema[tableName][key].type](key);\r\n      }\r\n\r\n      if (Schema[tableName][key].hasOwnProperty('nullable') && Schema[tableName][key].nullable === true) {\r\n        column.nullable();\r\n      }\r\n      else {\r\n        column.notNullable();\r\n      }\r\n\r\n      if (Schema[tableName][key].hasOwnProperty('primary') && Schema[tableName][key].primary === true) {\r\n        column.primary();\r\n      }\r\n\r\n      if (Schema[tableName][key].hasOwnProperty('unique') && Schema[tableName][key].unique) {\r\n        column.unique();\r\n      }\r\n\r\n      if (Schema[tableName][key].hasOwnProperty('unsigned') && Schema[tableName][key].unsigned) {\r\n        column.unsigned();\r\n      }\r\n\r\n      if (Schema[tableName][key].hasOwnProperty('references')) {\r\n        //check if table exists?\r\n        column.references(Schema[tableName][key].references);\r\n      }\r\n\r\n      if (Schema[tableName][key].hasOwnProperty('defaultTo')) {\r\n        column.defaultTo(Schema[tableName][key].defaultTo);\r\n      }\r\n    });\r\n  });\r\n}\r\n\r\n\r\nfunction createTables () {\r\n  var tables = [];\r\n  var tableNames = _.keys(Schema);\r\n\r\n  console.log('Creating tables...');\r\n\r\n  tables = _.map(tableNames, function (tableName) {\r\n    return function () {\r\n      return createTable(tableName);\r\n    };\r\n  });\r\n\r\n  return sequence(tables);\r\n}\r\n\r\n\r\ncreateTables()\r\n.then(function() {\r\n  console.log('Tables created!!');\r\n  process.exit(0);\r\n})\r\n.otherwise(function (error) {\r\n  throw error;\r\n});",
+            "position": "1,1"
+        },
+        {
+            "operation": "PASTE",
+            "lines": 1,
+            "keyStrokeTimeStamp": "Tue Mar 30 2021 17:30:33",
+            "keyStrokeInfo": "    ",
+            "position": "92,1"
+        }
+    ]
+}
